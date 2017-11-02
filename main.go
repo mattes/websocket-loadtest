@@ -54,7 +54,6 @@ func main() {
 	for range pool {
 		go func() {
 			c, err := newWebsocketConnection(url, h)
-
 			if err == nil {
 				defer func() {
 					c.Close()
@@ -74,6 +73,7 @@ func main() {
 			}
 		}()
 
+		// wait before new connection is created
 		time.Sleep(100 * time.Millisecond)
 	}
 }
