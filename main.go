@@ -69,8 +69,10 @@ func main() {
 				if verbose {
 					log.Printf("err: %v", err)
 				}
-				pool <- struct{}{} // add ticket to pool, block if pool is full
 			}
+
+			// add ticket to pool, wait if pool is full
+			pool <- struct{}{}
 		}()
 
 		// wait before new connection is created
