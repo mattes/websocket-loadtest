@@ -30,15 +30,17 @@ func main() {
 	h := parseHeaders(headers)
 
 	var connectionsCount int64
-	var connectionsErrCount int64
+	var connectionsErrCount uint64
+	var readMessagesCount uint64
 
 	// start logging stats
 	go func() {
 		t := time.Tick(5 * time.Second)
 		for range t {
-			log.Printf("connections=%v, errors_since_start=%v",
+			log.Printf("connections=%v, read_messages=%v errors_since_start=%v",
 				atomic.LoadInt64(&connectionsCount),
-				atomic.LoadInt64(&connectionsErrCount))
+				atomic.LoadUint64(&readMessagesCount),
+				atomic.LoadUint64(&connectionsErrCount))
 		}
 	}()
 
@@ -61,11 +63,11 @@ func main() {
 				}()
 
 				atomic.AddInt64(&connectionsCount, 1)
-				err = handleConnection(c)
+				err = handleConnection(c, &readMessagesCount)
 			}
 
 			if err != nil {
-				atomic.AddInt64(&connectionsErrCount, 1)
+				atomic.AddUint64(&connectionsErrCount, 1)
 				if verbose {
 					log.Printf("err: %v", err)
 				}
@@ -85,12 +87,14 @@ func newWebsocketConnection(url string, h http.Header) (*websocket.Conn, error) 
 	return c, err
 }
 
-func handleConnection(c *websocket.Conn) error {
+func handleConnection(c *websocket.Conn, messageCount *uint64) error {
 	// read and discard messages
 	for {
 		_, _, err := c.ReadMessage()
 		if err != nil {
 			return err
+		} else {
+			atomic.AddUint64(messageCount, 1)
 		}
 	}
 
