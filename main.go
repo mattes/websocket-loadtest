@@ -42,7 +42,9 @@ func main() {
 		}
 	}()
 
-	// fill pool with connections
+	// initialize connections pool
+	// failed connections will add a "ticket" to this pool
+	// and then will restart over time.
 	pool := make(chan struct{}, connections)
 	for i := uint(0); i < connections; i++ {
 		pool <- struct{}{}
@@ -68,7 +70,7 @@ func main() {
 				if verbose {
 					log.Printf("err: %v", err)
 				}
-				pool <- struct{}{}
+				pool <- struct{}{} // add ticket to pool, block if pool is full
 			}
 		}()
 
