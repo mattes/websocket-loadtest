@@ -147,8 +147,8 @@ func handleConnection(c *websocket.Conn, messageCount *uint64) error {
 		_, _, err := c.ReadMessage()
 		if err != nil {
 			return err
-		} else {
-			atomic.AddUint64(messageCount, 1)
 		}
+
+		atomic.AddUint64(messageCount, 1)
 	}
 }
