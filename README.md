@@ -1,4 +1,4 @@
-# Websockets Loadtest Tool
+# Websockets Loadtest Tool [![Build Status](https://travis-ci.org/templarbit/websocket-loadtest.svg?branch=master)](https://travis-ci.org/templarbit/websocket-loadtest)
 
 A small helper tool to load test Websockets.
 
