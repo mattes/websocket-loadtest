@@ -1,0 +1,3 @@
+wss://example.com cookie=user=123 origin=https://app.example.com
+wss://example2.com 
+# comment 
