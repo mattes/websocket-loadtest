@@ -3,6 +3,5 @@ language: go
 go:
   - 1.9.x
 
-script: 
-  - go test -race -v    
+script: go test -race -v    
 
